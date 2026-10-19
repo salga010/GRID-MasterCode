@@ -65,14 +65,25 @@ foreach yr of numlist $yrlist{
 	gen agealt = `yr'-yob2+1
 	qui: drop if agealt<${begin_age} | agealt>${end_age}
 	
+	// Share below the min income threshold (0s included). Calculated before dropping
+	// the observations without log earnings, which are exactly the ones below the threshold
+	gen out_share = labor`yr'< rmininc[`yr'-${yrfirst}+1,1]
+	
+	foreach llbvar in out_share{
+		
+		bymysum_meanonly "`llbvar'" "L_" "_`yr'" "year"
+				
+		foreach  vv in $hetgroup "male agealt"{ 
+			local suf=subinstr("`vv'"," ","",.)			
+			bymysum_meanonly "`llbvar'" "L_" "_`suf'`yr'" "year `vv'"				
+		}
+	}	
+	
 	// Drop if log earnings does not exist
 	drop if logearn==.
 	
 	// Gen earnings adjusted by the real min income
 	gen earn = labor`yr' if labor`yr'>=rmininc[`yr'-${yrfirst}+1,1]
-	
-	// Share of 0s 
-	gen out_share = labor`yr'< rmininc[`yr'-${yrfirst}+1,1]
 	
 	// Gen labor withour adjustment
 	rename labor`yr' labor		// notice the only difference between earn and labor is the low income workers
@@ -97,15 +108,6 @@ foreach yr of numlist $yrlist{
 		}
 	}	
 	
-	foreach llbvar in out_share{
-		
-		bymysum_meanonly "`llbvar'" "L_" "_`yr'" "year"
-				
-		foreach  vv in $hetgroup "male agealt"{ 
-			local suf=subinstr("`vv'"," ","",.)			
-			bymysum_meanonly "`llbvar'" "L_" "_`suf'`yr'" "year `vv'"				
-		}
-	}	
 	drop labor* out_share
 		
 	// A1. Moments of log earnings

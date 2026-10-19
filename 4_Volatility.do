@@ -151,8 +151,8 @@ foreach yr of numlist $d1yrlist{
 			// Individuals must have perm income, 1yr change and 5 yr change to be in the H sample
 			// Notice here we will consider growth rate with income above min tresh in t but above 1/3*min tresh in t+1
 			// See 1_Gen_Base_Sample.do for more details; 
-			foreach meas in log arc res{			
-			// Notice, we start with the arc percent since researn is a subset of arc
+			foreach meas in arc res log{			
+			// Notice, we start with the arc percent since researn is a subset of arc, and logearn is a subset of researn
 			drop if `meas'earn1F == . | `meas'earn5F == .	| permearn == . 
 				
 			// Overall ranking 
