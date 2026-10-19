@@ -24,6 +24,7 @@ global noise=0.0			// Noise added to income. See line 112 in 1_Gen_Base_Sample.d
 
 // Define what is the main directory where the data and do files are saved 
 global maindir =""
+if "`1'" != "" global maindir "`1'"		// maindir passed by runall.do
 
 global unix=1  // Please change this to 1 if you run stata on Unix or Mac
 
@@ -80,7 +81,7 @@ global kyear = 5
 	
 global nquantiles = 40
 	// Number of quantiles used in the statistics conditioning on permanent income
-	// One additional quintile will be added at the top for a total of 41 (see Guidelines)
+	// The top quantile is split at p99 and p99.9, for a total of 42 groups (see Guidelines)
 		
 global nquantilemob = 40
 	// Number of quantiles used in the rank-rank mobility measures.
@@ -257,6 +258,7 @@ forvalues yr = `tempyrb'(1)`tempyr'{
 *global perm3yrlist = /// 
 *	"1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,${yrlast}"
 	// Define the ending years (t) to construct permanent income between t-2 and t 
+	// 4_Volatility.do uses it with a one-year lag: changes between t and t+k use permanent income between t-3 and t-1
 	
 local tempyrb = $yrfirst+2	
 global perm3yrlist = "`tempyrb'"

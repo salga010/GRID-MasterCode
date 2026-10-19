@@ -13,11 +13,9 @@ clear all
 global maindir =""
 
 // Run the codes 
-do "$maindir/do/1_Gen_Base_Sample.do"
-do "$maindir/do/2_DescriptiveStats.do"
-do "$maindir/do/3_Inequality.do" 
-do "$maindir/do/4_Volatility.do" 
-do "$maindir/do/5_Mobility.do"
+// 0_Initialize.do defines the globals, matrices and programs used by codes 1 to 5
+// and runs them according to gen_base, desc_stats, ineq_stats, vol_stats and mob_stats
+do "$maindir/do/0_Initialize.do" "$maindir"
 
 // END OF THE CODE
 

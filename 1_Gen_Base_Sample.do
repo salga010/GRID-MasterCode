@@ -461,7 +461,7 @@ forvalues yr = `firstyr'/$yrlast{
 	
 	// Create age 
 	gen age = `yr'-yob+1
-	drop if age<${begin_age} + 2 | age>${end_age}			// This makes the min age 26 and max age 54
+	drop if age<${begin_age} + 2 | age>${end_age}			// This makes the min age 27 and max age 55
 	
 	// Create average income for those with at least 2 years of income 
 	gen totearn=0
@@ -483,7 +483,7 @@ forvalues yr = `firstyr'/$yrlast{
 		
 	// Save 
 	keep personid permearnalt`yr'
-	label var permearnalt`yr' "Altenative residual permanent income between `yr' and `yrL2'"
+	label var permearnalt`yr' "Altenative permanent income between `yr' and `yrL2'"
 	
 
 	compress 
