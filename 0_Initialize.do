@@ -129,12 +129,15 @@ THIS SECTION DEFINES THE REAL EXCHANGE CHANGE USING THE LOCAL AND US CPI
 */
 global cpi2018us = 108.231		// DO NOT CHANGE. This is the US PCE  
 								// Annual average from https://fred.stlouisfed.org/series/PCEPI#0
-matrix cpimatus = /*  PCE between 1970  and 2018
+								// 1970-2018 frozen (spring 2019 release). 2019: 109.922, as used for the US (2021-22 release).
+								// 2020-2023: 109.922 x (annual average / 2019 average), 25 Nov 2026 release. Link later years to 2023.
+matrix cpimatus = /*  PCE between 1970 and 2023
 */ (20.951, 21.841, 22.586, 23.802, 26.280, 28.470, 30.032, 31.986, 34.211, 37.250,  /*
 */ 41.262, 44.959, 47.456, 49.475, 51.343, 53.134, 54.290, 55.964, 58.150, 60.690,  /*
 */ 63.355, 65.473, 67.218, 68.892, 70.330, 71.811, 73.346, 74.623, 75.216, 76.338, /*
 */ 78.235, 79.738, 80.789, 82.358, 84.411, 86.813, 89.174, 91.438, 94.180, 94.094,  /*
-*/ 95.705, 98.130, 100.000, 101.347, 102.868, 103.126, 104.235, 106.073, 108.231 )'
+*/ 95.705, 98.130, 100.000, 101.347, 102.868, 103.126, 104.235, 106.073, 108.231, /*
+*/ 109.922, 111.151, 115.643, 123.227, 127.972 )'
 
 matrix cpimatus = cpimatus/${cpi2018us}
 
@@ -163,12 +166,15 @@ global set_rmininc = 1
 if ${set_rmininc} == 1{
 	
 	// CREATING MINIMUM INCOME THRESHOLD USING US MINIMUM WAGE  
-	matrix minwgus = /* Nominal minimum wage 1959-2018 in the US
+	// Federal minimum wage: https://fred.stlouisfed.org/series/FEDMINNFRWG
+	// Each year uses the rate in force in December of the previous year.
+	matrix minwgus = /* Nominal minimum wage 1959-2023 in the US
 	*/ (1.00,1.00,1.00,1.15,1.15,1.25,1.25,1.25,1.25,1.40,1.60,1.60,1.60,1.60,/*
 	*/  1.60,1.60,2.00,2.10,2.10,2.30,2.65,2.90,3.10,3.35,3.35,3.35,3.35,3.35,/*
 	*/  3.35,3.35,3.35,3.35,3.80,4.25,4.25,4.25,4.25,4.25,4.75,5.15,5.15,5.15,/*
 	*/  5.15,5.15,5.15,5.15,5.15,5.15,5.15,5.85,6.55,7.25,7.25,7.25,7.25,7.25,/*
-	*/  7.25,7.25,7.25)'
+	*/  7.25,7.25,7.25, /*
+	*/  7.25,7.25,7.25,7.25,7.25,7.25)'
 
 	local yinic = ${yrfirst} - 1959 + 1						
 	local yend = ${yrlast} - 1959 + 1
@@ -206,7 +212,7 @@ else if ${set_rmininc} == 2{
 	local i = 1
 	local tnum = ${yrlast}-${yrfirst}+1
 	forvalues pp = 1(1)`tnum'{
-		matrix rmininc[`i',1] = 100*mininc_C[`i',1]/cpimat[`i',1]					
+		matrix rmininc[`i',1] = mininc_C[`i',1]/cpimat[`i',1]					
 						// real min income threshold in local currency 
 		local i = `i' + 1
 	}
